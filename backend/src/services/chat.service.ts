@@ -1,3 +1,4 @@
+import { emitNewChatToParticpants } from "../lib/socket";
 import ChatModel from "../models/chat.model";
 import MessageModel from "../models/message.model";
 import UserModel from "../models/user.model";
@@ -44,7 +45,13 @@ export const createChatService = async (
         })
     }
 
-    // trien khai socket 
+    const populatedChat = await chat?.populate("participants", "name avatar isAI");
+    // Chuyển _id của từng participant thành chuỗi (string)
+    const particpantIdStrings = populatedChat?.participants?.map((p) => {
+      return p._id?.toString();
+    });
+    // Gửi sự kiện "chat:new" đến tất cả thành viên của chat
+    emitNewChatToParticpants(particpantIdStrings, populatedChat);
     return chat 
 }
 
@@ -93,3 +100,15 @@ export const getSingleChatService = async(chatId : string, userId : string)=>{
     messages,
   };
 }
+
+// Kiểm tra xem user có nằm trong danh sách thành viên của chat không
+export const validateChatParticipant = async (chatId: string, userId: string) => {
+  // Tìm chat có _id khớp và chứa userId trong participants
+  const chat = await ChatModel.findOne({
+    _id: chatId,
+    participants: { $in: [userId] },
+  });
+
+  if (!chat) throw new BadRequestException("User not a participant in chat");
+  return chat; // Trả về chat hợp lệ
+};

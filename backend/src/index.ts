@@ -7,11 +7,18 @@ import { asyncHandler } from './middlewares/asyncHandler.middleware'
 import { HTTPSTATUS } from './config/http.config'
 import { errorHandler } from './middlewares/errorHandler.middleware'
 import connecDB from './config/database.config'
-import passport from 'passport'
+import passport, { initialize } from 'passport'
 import './config/passport.config'
+import http from "http";
+import { initializeSocket } from './lib/socket'
 import routes from './routes'
 
+
 const app = express()
+const server = http.createServer(app);
+
+// socket 
+initializeSocket(server)
 
 app.use(express.json({limit : "10mb"}))
 app.use(cookieParser())
@@ -31,7 +38,7 @@ app.use('/api',routes)
 
 app.use(errorHandler)
 
-app.listen(Env.PORT,async() => {
+server.listen(Env.PORT,async() => {
   await connecDB()
   console.log(`server running ${Env.PORT}`)
 })

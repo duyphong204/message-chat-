@@ -1,4 +1,5 @@
 import cloudinary from "../config/cloudinary.config";
+import { emitLastMessageToParticipants, emitNewMessageToChatRoom } from "../lib/socket";
 import ChatModel from "../models/chat.model";
 import MessageModel from "../models/message.model";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
@@ -58,6 +59,21 @@ export const sendMessageService = async (
       },
     },
   ]);
+
+  // WebSocket
+
+  // Cập nhật tin nhắn cuối cùng (lastMessage) cho cuộc chat
+  chat.lastMessage = newMessage._id as mongoose.Types.ObjectId;
+  await chat.save();
+
+  // Gửi (emit) tin nhắn mới đến phòng chat (trừ người gửi)
+  emitNewMessageToChatRoom(userId, chatId, newMessage);
+
+  // Lấy danh sách tất cả ID của thành viên trong chat (dạng string)
+  const allParticipantIds = chat.participants.map((id) => id.toString());
+
+  // Gửi (emit) tin nhắn cuối cùng đến từng người trong phòng riêng (user room)
+  emitLastMessageToParticipants(allParticipantIds, chatId, newMessage);
 
   // Trả về message vừa tạo và chat
   return {userMessage: newMessage, chat};
