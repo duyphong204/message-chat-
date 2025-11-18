@@ -16,7 +16,8 @@ const AppRoutes = () =>{
                 </Route>
             </Route>
 
-             <Route path="/" element={<RouteGuard requireAuth/>}>
+             {/* protected (user login) */}
+             <Route path="/" element={<RouteGuard requireAuth={true}/>}>
                 <Route element = {<AppLayout />}>
                     {/* auth routes */}
                     {chatRoutesPaths?.map((route)=>(
