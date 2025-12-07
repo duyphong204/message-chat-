@@ -27,18 +27,23 @@ export const initializeSocket = (httpServer: HTTPServer) => {
   io.use(async (socket: AuthenticatedSocket, next) => {
     try {
       const rawCookie = socket.handshake.headers.cookie;
-      if (!rawCookie) return next(new Error("Unauthorized"));
+      if (!rawCookie) return next(new Error("Không được phép"));
 
-      const token = rawCookie?.split("=")?.[1]?.trim();
-      if (!token) return next(new Error("Unauthorized"));
+      const token = rawCookie
+        .split(";")
+        .find((c) => c.trim().startsWith("accessToken="))
+        ?.split("=")[1]
+        ?.trim();
+
+      if (!token) return next(new Error("Không được phép"));
 
       const decodedToken = jwt.verify(token, Env.JWT_SECRET) as { userId: string };
-      if (!decodedToken) return next(new Error("Unauthorized"));
+      if (!decodedToken) return next(new Error("Không được phép"));
 
       socket.userId = decodedToken.userId;
       next();
     } catch (error) {
-      next(new Error("Internal server error"));
+      next(new Error("Lỗi máy chủ nội bộ"));
     }
   });
 
@@ -69,7 +74,7 @@ export const initializeSocket = (httpServer: HTTPServer) => {
         console.log(`User ${userId} join room chat:${chatId}`);
         callback?.();
       } catch (error) {
-        callback?.("Error joining chat");
+        callback?.("Lỗi khi tham gia cuộc trò chuyện");
       }
     });
 
@@ -94,7 +99,7 @@ export const initializeSocket = (httpServer: HTTPServer) => {
 
 // lấy đối tượng io hiện tại
 function getIO() {
-  if (!io) throw new Error("Socket.IO not initialized");
+  if (!io) throw new Error("Socket.IO chưa được khởi tạo");
   return io;
 }
 

@@ -1,13 +1,15 @@
 import React from 'react'
+import Asidebar from './aside-bar'
 
 interface Props {
-    children: React.ReactNode
+  children: React.ReactNode
 }
-const AppWrapper = ({children}: Props) => {
+const AppWrapper = ({ children }: Props) => {
   return (
     <div className='h-full'>
-        {/* Toolbar */}
-        <main className='h-full'>{children}</main>
+      {/* Toolbar */}
+      <Asidebar />
+      <main className='lg:pl-10 h-full'>{children}</main>
     </div>
   )
 }

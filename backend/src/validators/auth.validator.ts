@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-export const emailSchema = z.string().trim().email('invalid email address').min(1, 'email is required');
-export const passwordSchema = z.string().trim().min(1, 'password is required');
+export const emailSchema = z.string().trim().email('Địa chỉ email không hợp lệ').min(1, 'Email là bắt buộc');
+export const passwordSchema = z.string().trim().min(1, 'Mật khẩu là bắt buộc');
 
 export const registerSchema = z.object({
-  name: z.string().trim().min(1, 'name is required'),
+  name: z.string().trim().min(1, 'Tên là bắt buộc'),
   email: emailSchema,
   password: passwordSchema,
   avatar: z.string().optional(),

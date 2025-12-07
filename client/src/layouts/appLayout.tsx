@@ -3,9 +3,11 @@ import { Outlet } from "react-router-dom"
 const AppLayout = () => {
   return (
     <AppWrapper>
-        <div className="h-full">
-            <Outlet/>
-        </div>
+      <div className="h-full">
+        {/* chatList */}
+
+        <Outlet />
+      </div>
     </AppWrapper>
   )
 }

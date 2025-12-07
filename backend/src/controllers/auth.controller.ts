@@ -18,7 +18,7 @@ export const registerController = asyncHandler(
     })
       .status(HTTPSTATUS.CREATED)
       .json({
-        message: "User created & login successfully",
+        message: "Đăng ký và đăng nhập thành công",
         user,
       });
   }
@@ -36,7 +36,7 @@ export const loginController = asyncHandler(
     })
       .status(HTTPSTATUS.OK)
       .json({
-        message: "User login successfully",
+        message: "Đăng nhập thành công",
         user,
       });
   }
@@ -45,7 +45,7 @@ export const loginController = asyncHandler(
 export const logoutController = asyncHandler(
   async (req: Request, res: Response) => {
     return clearJwtAuthCookie(res).status(HTTPSTATUS.OK).json({
-      message: "User logout successfully",
+      message: "Đăng xuất thành công",
     });
   }
 );
@@ -54,7 +54,7 @@ export const authStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const user = req.user;
     return res.status(HTTPSTATUS.OK).json({
-      message: "Authenticated User",
+      message: "Người dùng đã xác thực",
       user,
     });
   }

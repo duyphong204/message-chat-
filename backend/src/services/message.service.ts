@@ -20,7 +20,7 @@ export const sendMessageService = async (
     _id: chatId,
     participants: { $in: [userId] },
   });
-  if (!chat) throw new BadRequestException("Chat not found or unauthorized");
+  if (!chat) throw new BadRequestException("Không tìm thấy cuộc trò chuyện hoặc không có quyền");
 
   // Nếu là trả lời tin nhắn, kiểm tra tin nhắn gốc tồn tại
   if (replyToId) {
@@ -28,7 +28,7 @@ export const sendMessageService = async (
       _id: replyToId,
       chatId,
     });
-    if (!replyMessage) throw new NotFoundException("Reply message not found");
+    if (!replyMessage) throw new NotFoundException("Không tìm thấy tin nhắn trả lời");
   }
 
   // Upload ảnh lên Cloudinary nếu có
@@ -76,5 +76,5 @@ export const sendMessageService = async (
   emitLastMessageToParticipants(allParticipantIds, chatId, newMessage);
 
   // Trả về message vừa tạo và chat
-  return {userMessage: newMessage, chat};
+  return { userMessage: newMessage, chat };
 };
