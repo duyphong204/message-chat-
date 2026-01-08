@@ -16,7 +16,7 @@ const Asidebar = () => {
     const { user, logout } = useAuth();
     const { theme, setTheme } = useTheme()
     const isOnline = isUserOnline(user?._id)
-    return <aside className="top-0 fixed inset-y-0 w-11 left-0 z-[9999] h-svh bg-primary/85 shadow-sm  ">
+    return <aside className="top-0 fixed inset-y-0 w-11 left-0 z-99 h-svh bg-primary/85 shadow-sm  ">
         <div className="w-full h-full px-1 pt-1 pb-6 flex flex-col items-center justify-between">
             <Logo
                 url={CHAT_ROUTES.CHAT}
@@ -44,7 +44,7 @@ const Asidebar = () => {
                             />
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-48 rounded-lg z-[9999]" align="end">
+                    <DropdownMenuContent className="w-48 rounded-lg z-99" align="end">
                         <DropdownMenuLabel>My account</DropdownMenuLabel>
                         <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>

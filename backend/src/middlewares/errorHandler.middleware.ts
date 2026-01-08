@@ -8,8 +8,7 @@ export const errorHandler: ErrorRequestHandler = (
   res,
   next
 ): any => {
-  console.log(`Error occurred: ${req.path}`, error);
-
+  
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
       message: error.message,
