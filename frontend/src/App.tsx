@@ -5,11 +5,9 @@ import { Button } from './components/ui/button'
 function App() {
 
   return (
-    <>
-      <div>
-
-      </div>
-    </>
+    <div>
+      <h1>hello</h1>
+    </div>
   )
 }
 
