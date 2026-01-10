@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import express,{Request,Response} from 'express'
+import express, { Request, Response } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { Env } from './config/env.config'
@@ -20,25 +20,20 @@ const server = http.createServer(app);
 // socket 
 initializeSocket(server)
 
-app.use(express.json({limit : "10mb"}))
+app.use(express.json({ limit: "10mb" }))
 app.use(cookieParser())
-app.use(express.urlencoded({extended : true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-  origin:Env.FRONTEND_ORIGIN,
-  credentials:true
+  origin: Env.FRONTEND_ORIGIN,
+  credentials: true
 }))
 
 app.use(passport.initialize())
-
-app.get('/heath',asyncHandler(async(req:Request,res:Response)=>{
-  res.status(HTTPSTATUS.OK).json({messsage:"server is heathy",status:"Ok"})
-}))
-
-app.use('/api',routes)
+app.use('/api', routes)
 
 app.use(errorHandler)
 
-server.listen(Env.PORT,async() => {
+server.listen(Env.PORT, async () => {
   await connecDB()
   console.log(`server running ${Env.PORT}`)
 })

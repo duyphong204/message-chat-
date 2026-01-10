@@ -1,26 +1,31 @@
 import passport from "passport";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { Strategy as JwtStrategy } from "passport-jwt";
 import { UnauthorizedException } from "../utils/app-error";
 import { Env } from "./env.config";
 import { findByIdUserService } from "../services/user.service";
 
+const customCookieExtractor = (req: any) => {
+  const token = req?.cookies?.accessToken;
+  if (!token) {
+    throw new UnauthorizedException("Unauthorized access");
+  }
+  return token;
+};
+
+// 2. Cấu hình Strategy
 passport.use(
   new JwtStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (req) => {
-          const token = req.cookies.accessToken;
-          if (!token) throw new UnauthorizedException("Unauthorized access");
-          return token;
-        },
-      ]),
+      jwtFromRequest: customCookieExtractor,
       secretOrKey: Env.JWT_SECRET,
       audience: ["user"],
       algorithms: ["HS256"],
     },
-    async ({ userId }, done) => {
+    async (payload, done) => {
       try {
-        const user = userId && (await findByIdUserService(userId));
+        const userId = payload.userId;
+        const user = userId ? await findByIdUserService(userId) : null;
+
         return done(null, user || false);
       } catch (error) {
         return done(null, false);
